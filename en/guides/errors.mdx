@@ -1,0 +1,272 @@
+---
+title: "Error Handling"
+description: "Understanding and handling API errors"
+---
+
+## Error Response Format
+
+All error responses follow a consistent format:
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error description"
+  }
+}
+```
+
+## HTTP Status Codes
+
+| Status | Meaning |
+|--------|---------|
+| 400 | Bad Request - Invalid parameters |
+| 401 | Unauthorized - Invalid or missing API key |
+| 403 | Forbidden - Insufficient permissions or balance |
+| 404 | Not Found - Resource doesn't exist |
+| 429 | Too Many Requests - Rate limited |
+| 500 | Internal Server Error - Our fault |
+| 502 | Bad Gateway - Upstream provider error |
+
+## Error Codes
+
+### VALIDATION_ERROR (400)
+
+Request parameters are invalid.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "prompt is required"
+  }
+}
+```
+
+**Common causes:**
+- Missing required fields (`model`, `prompt`)
+- Invalid field values (e.g., `width` outside 256-2048)
+- Invalid model name
+- Prompt too long (max 2000 characters)
+
+**Fix:** Check your request body against the API documentation.
+
+### UNAUTHORIZED (401)
+
+API key is invalid or missing.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid or missing API key"
+  }
+}
+```
+
+**Common causes:**
+- Missing `Authorization` header
+- Missing `Bearer` prefix
+- Typo in API key
+- Revoked API key
+
+**Fix:** Ensure your API key is correct and the header format is `Authorization: Bearer YOUR_KEY`.
+
+### INSUFFICIENT_BALANCE (403)
+
+Account balance is too low.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "INSUFFICIENT_BALANCE",
+    "message": "Insufficient balance"
+  }
+}
+```
+
+**Fix:** Add funds to your account in the [dashboard](https://eggapi.ai/dashboard).
+
+### NOT_FOUND (404)
+
+Requested resource doesn't exist.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Task not found"
+  }
+}
+```
+
+**Common causes:**
+- Invalid task ID
+- Task belongs to a different user
+- Typo in resource ID
+
+### RATE_LIMITED (429)
+
+Too many requests.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "RATE_LIMITED",
+    "message": "Rate limit exceeded"
+  }
+}
+```
+
+**Fix:** Implement exponential backoff or reduce request frequency.
+
+### INTERNAL_ERROR (500)
+
+Server error on our side.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "An unexpected error occurred"
+  }
+}
+```
+
+**Fix:** Retry after a few seconds. If persistent, contact support.
+
+### UPSTREAM_ERROR (502)
+
+Error from upstream AI provider.
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "UPSTREAM_ERROR",
+    "message": "Provider temporarily unavailable"
+  }
+}
+```
+
+<Note>
+  Our system automatically retries with backup providers. You'll only see this error if all providers are unavailable.
+</Note>
+
+## Error Handling Best Practices
+
+### 1. Always Check for Errors
+
+<CodeGroup>
+
+```python Python
+response = requests.post(url, headers=headers, json=data)
+result = response.json()
+
+if result["error"]:
+    error = result["error"]
+    print(f"Error {error['code']}: {error['message']}")
+    # Handle specific errors
+    if error["code"] == "INSUFFICIENT_BALANCE":
+        # Prompt user to add funds
+        pass
+    elif error["code"] == "RATE_LIMITED":
+        # Wait and retry
+        pass
+else:
+    # Process successful response
+    data = result["data"]
+```
+
+```javascript JavaScript
+const result = await response.json();
+
+if (result.error) {
+  const { code, message } = result.error;
+  console.error(`Error ${code}: ${message}`);
+
+  switch (code) {
+    case "INSUFFICIENT_BALANCE":
+      // Prompt user to add funds
+      break;
+    case "RATE_LIMITED":
+      // Wait and retry
+      break;
+    default:
+      // Handle other errors
+  }
+} else {
+  // Process successful response
+  const data = result.data;
+}
+```
+
+</CodeGroup>
+
+### 2. Implement Retry Logic
+
+For transient errors (500, 502, 429), implement retry with exponential backoff:
+
+```python
+import time
+
+def make_request_with_retry(url, headers, data, max_retries=3):
+    for attempt in range(max_retries):
+        response = requests.post(url, headers=headers, json=data)
+        result = response.json()
+
+        if not result["error"]:
+            return result["data"]
+
+        error_code = result["error"]["code"]
+
+        # Don't retry client errors
+        if error_code in ["VALIDATION_ERROR", "UNAUTHORIZED", "INSUFFICIENT_BALANCE"]:
+            raise Exception(f"{error_code}: {result['error']['message']}")
+
+        # Retry server errors with backoff
+        if error_code in ["INTERNAL_ERROR", "UPSTREAM_ERROR", "RATE_LIMITED"]:
+            wait_time = 2 ** attempt  # 1s, 2s, 4s
+            print(f"Retrying in {wait_time}s...")
+            time.sleep(wait_time)
+            continue
+
+    raise Exception("Max retries exceeded")
+```
+
+### 3. Log Errors for Debugging
+
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+try:
+    result = make_api_request(...)
+except Exception as e:
+    logger.error(f"API request failed: {e}", extra={
+        "endpoint": "/v1/generate",
+        "model": "nanobanana-pro",
+        "error_code": result.get("error", {}).get("code")
+    })
+    raise
+```
+
+## Need Help?
+
+If you encounter persistent errors:
+
+1. Check the [API Status](https://status.eggapi.ai) page
+2. Review your request against the documentation
+3. Contact support at support@eggapi.ai with:
+   - Your request details (without API key)
+   - The error response
+   - Timestamp of the request

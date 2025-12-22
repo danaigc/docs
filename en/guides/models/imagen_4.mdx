@@ -1,0 +1,118 @@
+---
+title: "imagen_4"
+description: "High-quality image generation with superior detail and aesthetics"
+---
+
+## Overview
+
+imagen_4 is a high-quality image generation model with superior detail and aesthetics.
+
+- **Type**: Image Generation
+- **Processing**: Synchronous
+- **Resolution**: Multiple aspect ratios
+- **Price**: $0.016 per image
+
+## Parameters
+
+<ParamField body="model" type="string" required>
+  `imagen_4`
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  Description of the image to generate (max 2000 characters)
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  What to avoid in the image (max 1000 characters)
+</ParamField>
+
+<ParamField body="width" type="integer">
+  Image width in pixels (256-2048, default: 1024)
+</ParamField>
+
+<ParamField body="height" type="integer">
+  Image height in pixels (256-2048, default: 1024)
+</ParamField>
+
+<ParamField body="num_outputs" type="integer">
+  Number of images to generate (1-4, default: 1)
+</ParamField>
+
+<ParamField body="orientation" type="string">
+  Image orientation: `portrait` or `landscape`
+</ParamField>
+
+## Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.eggapi.ai/v1/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "imagen_4",
+    "prompt": "A serene Japanese garden with cherry blossoms",
+    "negative_prompt": "blurry, low quality",
+    "width": 1024,
+    "height": 1024,
+    "num_outputs": 1
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.eggapi.ai/v1/generate",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={
+        "model": "imagen_4",
+        "prompt": "A serene Japanese garden with cherry blossoms",
+        "negative_prompt": "blurry, low quality",
+        "width": 1024,
+        "height": 1024,
+        "num_outputs": 1
+    }
+)
+
+result = response.json()["data"]
+print(f"Image URL: {result['urls'][0]}")
+```
+
+```javascript JavaScript
+const response = await fetch("https://api.eggapi.ai/v1/generate", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "imagen_4",
+    prompt: "A serene Japanese garden with cherry blossoms",
+    negative_prompt: "blurry, low quality",
+    width: 1024,
+    height: 1024,
+    num_outputs: 1
+  })
+});
+
+const { data: result } = await response.json();
+console.log("Image URL:", result.urls[0]);
+```
+
+</CodeGroup>
+
+## Response
+
+```json
+{
+  "data": {
+    "id": "gen_abc123def456",
+    "model": "imagen_4",
+    "urls": ["https://cdn.eggapi.ai/outputs/abc123.png"],
+    "cost": "$0.0160"
+  },
+  "error": null
+}
+```

@@ -1,0 +1,120 @@
+---
+title: "Welcome to Egg API"
+description: "The unified API for AI image and video generation"
+---
+
+## What is Egg API?
+
+Egg API is a unified API gateway that aggregates multiple AI generation models, providing a single, consistent interface for image and video generation. With automatic failover and competitive pricing, you can focus on building your application while we handle the infrastructure.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Generate your first image in under 5 minutes
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Explore our complete API documentation
+  </Card>
+  <Card title="Models & Pricing" icon="cube" href="/guides/models">
+    View available models and their pricing
+  </Card>
+  <Card title="Authentication" icon="key" href="/guides/authentication">
+    Learn how to authenticate your requests
+  </Card>
+</CardGroup>
+
+## Key Features
+
+<AccordionGroup>
+  <Accordion title="Multi-Model Support" icon="layer-group">
+    Access multiple AI models through a single API. Currently supporting:
+    - **veo3.1** - High-quality video generation
+    - **nanobanana** - Fast image generation
+    - **nanobanana-pro** - Professional image generation
+  </Accordion>
+
+  <Accordion title="Automatic Failover" icon="shield-check">
+    Our infrastructure automatically routes requests to backup providers if the primary one fails, ensuring high availability for your applications.
+  </Accordion>
+
+  <Accordion title="Pay-as-you-go Pricing" icon="credit-card">
+    Only pay for what you use. No monthly fees, no commitments. Check our [pricing page](/guides/models) for details.
+  </Accordion>
+
+  <Accordion title="Simple Integration" icon="plug">
+    Standard REST API with Bearer token authentication. Works with any programming language or HTTP client.
+  </Accordion>
+</AccordionGroup>
+
+## Quick Example
+
+Generate an image with just a few lines of code:
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.eggapi.ai/v1/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "nanobanana-pro",
+    "prompt": "A serene mountain landscape at sunset",
+    "width": 1024,
+    "height": 1024
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.eggapi.ai/v1/generate",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={
+        "model": "nanobanana-pro",
+        "prompt": "A serene mountain landscape at sunset",
+        "width": 1024,
+        "height": 1024
+    }
+)
+
+print(response.json()["data"]["urls"][0])
+```
+
+```javascript JavaScript
+const response = await fetch("https://api.eggapi.ai/v1/generate", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "nanobanana-pro",
+    prompt: "A serene mountain landscape at sunset",
+    width: 1024,
+    height: 1024
+  })
+});
+
+const data = await response.json();
+console.log(data.data.urls[0]);
+```
+
+</CodeGroup>
+
+## Getting Started
+
+<Steps>
+  <Step title="Get your API Key">
+    Sign up at [eggapi.ai](https://eggapi.ai) and get your API key from the dashboard.
+  </Step>
+  <Step title="Make your first request">
+    Use the API key to authenticate and generate your first image.
+  </Step>
+  <Step title="Build your application">
+    Integrate Egg API into your product and start generating content.
+  </Step>
+</Steps>
+
+<Card title="Ready to start?" icon="arrow-right" href="/quickstart">
+  Follow our quickstart guide to generate your first image
+</Card>

@@ -1,68 +1,157 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Egg API",
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
+  },
   "colors": {
     "primary": "#16A34A",
-    "light": "#07C983",
+    "light": "#22C55E",
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+  "api": {
+    "baseUrl": "https://api.eggapi.ai",
+    "auth": {
+      "method": "bearer",
+      "name": "Authorization"
+    },
+    "playground": {
+      "mode": "show"
+    }
+  },
+  "openapi": "/api-reference/openapi.json",
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guides",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "en/index",
+                  "en/quickstart"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "en/guides/authentication",
+                  "en/guides/models",
+                  {
+                    "group": "Models API",
+                    "pages": [
+                      "en/guides/models/veo3.1",
+                      "en/guides/models/nanobanana",
+                      "en/guides/models/nanobanana-pro",
+                      "en/guides/models/imagen_4"
+                    ]
+                  },
+                  "en/guides/async-tasks",
+                  "en/guides/errors"
+                ]
+              }
             ]
           },
           {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "en/api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Generation",
+                "pages": [
+                  "POST /v1/generate"
+                ]
+              },
+              {
+                "group": "Tasks",
+                "pages": [
+                  "GET /v1/tasks/{id}",
+                  "GET /v1/tasks"
+                ]
+              },
+              {
+                "group": "Usage",
+                "pages": [
+                  "GET /v1/usage",
+                  "GET /v1/usage/summary"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
-        "groups": [
+        "language": "zh",
+        "tabs": [
           {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
+            "tab": "文档",
+            "groups": [
+              {
+                "group": "快速开始",
+                "pages": [
+                  "zh/index",
+                  "zh/quickstart"
+                ]
+              },
+              {
+                "group": "指南",
+                "pages": [
+                  "zh/guides/authentication",
+                  "zh/guides/models",
+                  {
+                    "group": "模型 API",
+                    "pages": [
+                      "zh/guides/models/veo3.1",
+                      "zh/guides/models/nanobanana",
+                      "zh/guides/models/nanobanana-pro",
+                      "zh/guides/models/imagen_4"
+                    ]
+                  },
+                  "zh/guides/async-tasks",
+                  "zh/guides/errors"
+                ]
+              }
             ]
           },
           {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概述",
+                "pages": [
+                  "zh/api-reference/introduction"
+                ]
+              },
+              {
+                "group": "生成",
+                "pages": [
+                  "POST /v1/generate"
+                ]
+              },
+              {
+                "group": "任务",
+                "pages": [
+                  "GET /v1/tasks/{id}",
+                  "GET /v1/tasks"
+                ]
+              },
+              {
+                "group": "用量",
+                "pages": [
+                  "GET /v1/usage",
+                  "GET /v1/usage/summary"
+                ]
+              }
             ]
           }
         ]
@@ -71,14 +160,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "API Status",
+          "href": "https://status.eggapi.ai",
+          "icon": "signal"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "GitHub",
+          "href": "https://github.com/eggapi",
+          "icon": "github"
         }
       ]
     }
@@ -91,32 +180,19 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@eggapi.ai"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://eggapi.ai/dashboard"
     }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/eggapi",
+      "github": "https://github.com/eggapi"
     }
   }
 }

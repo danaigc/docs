@@ -1,0 +1,132 @@
+---
+title: "API Reference"
+description: "Complete reference for the Egg API"
+---
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.eggapi.ai
+```
+
+## Authentication
+
+Egg API uses Bearer token authentication. Include your API key in the `Authorization` header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+<Note>
+  Get your API key from the [dashboard](https://eggapi.ai/dashboard). Keep it secure and never expose it in client-side code.
+</Note>
+
+## Request Format
+
+All requests should:
+- Use HTTPS
+- Include `Content-Type: application/json` header for POST requests
+- Include the `Authorization` header with your API key
+
+## Response Format
+
+All responses follow a consistent format:
+
+### Success Response
+
+```json
+{
+  "data": {
+    // Response data here
+  },
+  "error": null
+}
+```
+
+### Error Response
+
+```json
+{
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "prompt is required"
+  }
+}
+```
+
+## HTTP Status Codes
+
+| Status Code | Description |
+|-------------|-------------|
+| 200 | Success |
+| 202 | Accepted (async task created) |
+| 400 | Bad Request / Validation Error |
+| 401 | Unauthorized (invalid API key) |
+| 403 | Forbidden (insufficient balance) |
+| 404 | Not Found |
+| 429 | Rate Limited |
+| 500 | Internal Server Error |
+
+## Error Codes
+
+| Code | Description |
+|------|-------------|
+| `VALIDATION_ERROR` | Request parameters are invalid |
+| `UNAUTHORIZED` | API key is missing or invalid |
+| `INSUFFICIENT_BALANCE` | Account balance is too low |
+| `NOT_FOUND` | Requested resource doesn't exist |
+| `RATE_LIMITED` | Too many requests |
+| `INTERNAL_ERROR` | Server error |
+| `UPSTREAM_ERROR` | Provider error |
+
+## Rate Limits
+
+- **Per IP**: 100 requests per second
+- **Per API Key**: Varies by plan
+
+When rate limited, you'll receive a `429` status code with the `RATE_LIMITED` error code.
+
+## Pagination
+
+List endpoints support pagination with the following query parameters:
+
+| Parameter | Default | Max | Description |
+|-----------|---------|-----|-------------|
+| `page` | 1 | - | Page number |
+| `per_page` | 20 | 100 | Items per page |
+
+Paginated responses include:
+
+```json
+{
+  "data": {
+    "items": [...],
+    "pagination": {
+      "page": 1,
+      "per_page": 20,
+      "total": 100,
+      "total_pages": 5
+    }
+  }
+}
+```
+
+## Available Endpoints
+
+<CardGroup cols={2}>
+  <Card title="POST /v1/generate" href="#generation">
+    Generate images or videos
+  </Card>
+  <Card title="GET /v1/tasks/{id}" href="#tasks">
+    Get task status
+  </Card>
+  <Card title="GET /v1/tasks" href="#tasks">
+    List all tasks
+  </Card>
+  <Card title="GET /v1/usage" href="#usage">
+    View usage records
+  </Card>
+</CardGroup>

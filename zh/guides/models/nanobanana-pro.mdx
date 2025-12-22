@@ -1,0 +1,129 @@
+---
+title: "nanobanana-pro"
+description: "Professional-grade image generation with enhanced detail"
+---
+
+## Overview
+
+nanobanana-pro is a professional-grade image generation model with enhanced detail.
+
+- **Type**: Image Generation
+- **Processing**: Synchronous
+- **Resolution**: 1K / 2K / 4K
+- **Price**: $0.016 per image
+
+## Parameters
+
+<ParamField body="model" type="string" required>
+  `nanobanana-pro`
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  Description of the image to generate (max 2000 characters)
+</ParamField>
+
+<ParamField body="negative_prompt" type="string">
+  What to avoid in the image (max 1000 characters)
+</ParamField>
+
+<ParamField body="width" type="integer">
+  Image width in pixels (256-2048, default: 1024)
+</ParamField>
+
+<ParamField body="height" type="integer">
+  Image height in pixels (256-2048, default: 1024)
+</ParamField>
+
+<ParamField body="num_outputs" type="integer">
+  Number of images to generate (1-4, default: 1)
+</ParamField>
+
+<ParamField body="resolution" type="string">
+  Output resolution: `1K`, `2K`, or `4K`
+</ParamField>
+
+<ParamField body="orientation" type="string">
+  Image orientation: `portrait` or `landscape`
+</ParamField>
+
+## Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.eggapi.ai/v1/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "nanobanana-pro",
+    "prompt": "A futuristic cityscape at night, cyberpunk style",
+    "negative_prompt": "blurry, low quality",
+    "width": 1024,
+    "height": 1024,
+    "num_outputs": 2,
+    "resolution": "2K"
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.eggapi.ai/v1/generate",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={
+        "model": "nanobanana-pro",
+        "prompt": "A futuristic cityscape at night, cyberpunk style",
+        "negative_prompt": "blurry, low quality",
+        "width": 1024,
+        "height": 1024,
+        "num_outputs": 2,
+        "resolution": "2K"
+    }
+)
+
+result = response.json()["data"]
+for i, url in enumerate(result["urls"]):
+    print(f"Image {i+1}: {url}")
+```
+
+```javascript JavaScript
+const response = await fetch("https://api.eggapi.ai/v1/generate", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "nanobanana-pro",
+    prompt: "A futuristic cityscape at night, cyberpunk style",
+    negative_prompt: "blurry, low quality",
+    width: 1024,
+    height: 1024,
+    num_outputs: 2,
+    resolution: "2K"
+  })
+});
+
+const { data: result } = await response.json();
+result.urls.forEach((url, i) => console.log(`Image ${i+1}:`, url));
+```
+
+</CodeGroup>
+
+## Response
+
+```json
+{
+  "data": {
+    "id": "gen_abc123def456",
+    "model": "nanobanana-pro",
+    "urls": [
+      "https://cdn.eggapi.ai/outputs/abc123.png",
+      "https://cdn.eggapi.ai/outputs/def456.png"
+    ],
+    "cost": "$0.0320"
+  },
+  "error": null
+}
+```

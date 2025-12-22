@@ -1,0 +1,86 @@
+---
+title: "Models & Pricing"
+description: "Available AI models and their pricing"
+---
+
+## Available Models
+
+Egg API provides access to multiple AI models for image and video generation.
+
+<CardGroup cols={2}>
+  <Card title="veo3.1" icon="video" href="/zh/guides/models/veo3.1">
+    **Video Generation**
+
+    High-quality video generation with excellent motion consistency.
+
+    - Async processing
+    - 1-60 seconds duration
+    - fast / relaxed modes
+  </Card>
+  <Card title="nanobanana" icon="image" href="/zh/guides/models/nanobanana">
+    **Image Generation**
+
+    Fast, efficient image generation for general use cases.
+
+    - Synchronous
+    - Up to 2048x2048
+    - Multiple outputs
+  </Card>
+  <Card title="nanobanana-pro" icon="star" href="/zh/guides/models/nanobanana-pro">
+    **Image Generation Pro**
+
+    Professional-grade image generation with enhanced detail.
+
+    - Synchronous
+    - 1K / 2K / 4K resolution
+    - Higher quality
+  </Card>
+  <Card title="imagen_4" icon="sparkles" href="/zh/guides/models/imagen_4">
+    **Image Generation**
+
+    High-quality image generation with superior detail and aesthetics.
+
+    - Synchronous
+    - Multiple aspect ratios
+    - Professional quality
+  </Card>
+</CardGroup>
+
+## Pricing
+
+All pricing is pay-as-you-go with no monthly minimums.
+
+| Model | Type | Unit | Price |
+|-------|------|------|-------|
+| `veo3.1` | Video | per second | $0.08 |
+| `nanobanana` | Image | per image | $0.016 |
+| `nanobanana-pro` | Image | per image | $0.016 |
+| `imagen_4` | Image | per image | $0.016 |
+
+### Example Costs
+
+| Use Case | Calculation | Cost |
+|----------|-------------|------|
+| 1 image (nanobanana-pro) | 1 × $0.016 | $0.016 |
+| 4 images (nanobanana) | 4 × $0.016 | $0.064 |
+| 1 image (imagen_4) | 1 × $0.016 | $0.016 |
+| 5-second video (veo3.1) | 5 × $0.08 | $0.40 |
+| 30-second video (veo3.1) | 30 × $0.08 | $2.40 |
+
+## Choosing the Right Model
+
+| Use Case | Recommended Model |
+|----------|-------------------|
+| Quick prototyping | nanobanana |
+| Production images | nanobanana-pro, imagen_4 |
+| Video content | veo3.1 |
+| Social media posts | nanobanana-pro (images), veo3.1 (videos) |
+| Marketing materials | nanobanana-pro, imagen_4 |
+| High-quality artwork | imagen_4 |
+
+## Billing
+
+- Charges are applied immediately upon successful generation
+- Failed generations are not charged
+- Check your usage with `GET /v1/usage/summary`
+- View your balance in the [dashboard](https://eggapi.ai/dashboard)

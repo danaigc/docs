@@ -1,16 +1,17 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Egg API",
+    "description": "AI Model Aggregation API for image and video generation",
+    "version": "1.0.0",
+    "contact": {
+      "email": "support@eggapi.ai"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.eggapi.ai",
+      "description": "Production"
     }
   ],
   "security": [
@@ -19,76 +20,100 @@
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+    "/v1/generate": {
+      "post": {
+        "operationId": "generate",
+        "summary": "Generate Content",
+        "description": "Generate images or videos using AI models. Synchronous models (nanobanana) return results immediately, while async models (veo3.1) return a task ID for polling.",
+        "tags": ["Generation"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateRequest"
+              },
+              "examples": {
+                "image": {
+                  "summary": "Generate an image",
+                  "value": {
+                    "model": "nanobanana-pro",
+                    "prompt": "A serene mountain landscape at sunset",
+                    "width": 1024,
+                    "height": 1024,
+                    "num_outputs": 1
+                  }
+                },
+                "video": {
+                  "summary": "Generate a video",
+                  "value": {
+                    "model": "veo3.1",
+                    "prompt": "A cat playing with a ball of yarn",
+                    "duration": 5,
+                    "aspect_ratio": "16:9"
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
           }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Synchronous generation completed",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/GenerateResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Async task created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "Validation error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -96,121 +121,501 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/v1/tasks/{id}": {
+      "get": {
+        "operationId": "getTask",
+        "summary": "Get Task",
+        "description": "Retrieve the status and result of an async generation task.",
+        "tags": ["Tasks"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of plant to delete",
             "required": true,
+            "description": "Task ID (e.g., gen_abc123)",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "Task details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/TaskDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+    },
+    "/v1/tasks": {
+      "get": {
+        "operationId": "listTasks",
+        "summary": "List Tasks",
+        "description": "Get a paginated list of your generation tasks.",
+        "tags": ["Tasks"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page (default: 20, max: 100)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskListResponse"
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/v1/usage": {
+      "get": {
+        "operationId": "listUsage",
+        "summary": "List Usage",
+        "description": "Get a paginated list of your API usage records.",
+        "tags": ["Usage"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page (default: 20, max: 100)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "List of usage records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usage/summary": {
+      "get": {
+        "operationId": "getUsageSummary",
+        "summary": "Usage Summary",
+        "description": "Get aggregated usage statistics grouped by model.",
+        "tags": ["Usage"],
+        "responses": {
+          "200": {
+            "description": "Usage summary by model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageSummaryResponse"
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "API Key authentication. Get your key from the dashboard."
+      }
+    },
+    "schemas": {
+      "GenerateRequest": {
+        "type": "object",
+        "required": ["model", "prompt"],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": ["veo3.1", "nanobanana", "nanobanana-pro"],
+            "description": "The model to use for generation"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "The prompt describing what to generate"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "What to avoid in the generation"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 256,
+            "maximum": 2048,
+            "description": "Image width in pixels (for image models)"
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 256,
+            "maximum": 2048,
+            "description": "Image height in pixels (for image models)"
+          },
+          "num_outputs": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1,
+            "description": "Number of images to generate"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60,
+            "description": "Video duration in seconds (for video models)"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+            "description": "Aspect ratio for video generation"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Reference image URL for image-to-image/video"
+          }
+        }
+      },
+      "GenerateResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Generation ID"
+              },
+              "model": {
+                "type": "string",
+                "description": "Model used"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Generated content URLs"
+              },
+              "cost": {
+                "type": "string",
+                "description": "Total cost (e.g., '$0.0160')"
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "TaskDetailResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Task ID (e.g., gen_abc123)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "processing", "completed", "failed"],
+            "description": "Current task status"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["video_generate", "image_generate"],
+            "description": "Generation type"
+          },
+          "output": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Generated content URL"
+              },
+              "duration_seconds": {
+                "type": "integer",
+                "description": "Video duration (for videos)"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              }
+            }
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if failed"
+          },
+          "cost": {
+            "type": "string",
+            "description": "Total cost"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "TaskListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "UsageRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "model": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["image", "video"]
+          },
+          "units": {
+            "type": "number",
+            "description": "Number of units consumed"
+          },
+          "unit_cost": {
+            "type": "string",
+            "description": "Cost per unit"
+          },
+          "total_cost": {
+            "type": "string",
+            "description": "Total cost"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UsageListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UsageRecord"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "UsageSummary": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "total_units": {
+            "type": "number"
+          },
+          "total_cost": {
+            "type": "string"
+          },
+          "request_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "UsageSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UsageSummary"
+            }
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "null"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "BAD_REQUEST",
+                  "VALIDATION_ERROR",
+                  "UNAUTHORIZED",
+                  "FORBIDDEN",
+                  "INSUFFICIENT_BALANCE",
+                  "NOT_FOUND",
+                  "RATE_LIMITED",
+                  "INTERNAL_ERROR",
+                  "UPSTREAM_ERROR"
+                ],
+                "description": "Error code"
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable error message"
+              }
+            },
+            "required": ["code", "message"]
+          }
+        }
       }
     }
   }
