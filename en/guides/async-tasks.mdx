@@ -74,6 +74,91 @@ curl -X POST https://api.eggapi.ai/v1/generate \
 }
 ```
 
+## Webhook Notifications (Optional)
+
+If you don't want to poll, include `webhook_url` when you create the task. Egg API will POST to your URL when the task completes or fails.
+
+```bash
+curl -X POST https://api.eggapi.ai/v1/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "veo3.1",
+    "prompt": "A cat playing with a ball of yarn",
+    "duration": 5,
+    "aspect_ratio": "16:9",
+    "webhook_url": "https://example.com/eggapi/webhook"
+  }'
+```
+
+### Headers
+
+- `Content-Type: application/json`
+- `X-EggAPI-Timestamp`: Unix timestamp (seconds)
+- `X-EggAPI-Signature`: Optional. `sha256=` + HMAC-SHA256(hex), signing `{timestamp}.{raw_body}`
+
+<Note>
+  The signature header is only sent after you generate a Webhook Secret in the dashboard.
+</Note>
+
+### Payload Example
+
+```json
+{
+  "event": "task.completed",
+  "task_id": "gen_abc123def456",
+  "status": "completed",
+  "model": "veo3.1",
+  "output": {
+    "url": "https://cdn.eggapi.ai/outputs/abc123.mp4",
+    "duration_seconds": 5
+  },
+  "error": null,
+  "cost": "0.400000",
+  "timestamp": 1705314690
+}
+```
+
+When the task fails:
+
+```json
+{
+  "event": "task.failed",
+  "task_id": "gen_abc123def456",
+  "status": "failed",
+  "model": "veo3.1",
+  "error": "Content moderation: prompt contains prohibited content",
+  "cost": "0.000000",
+  "timestamp": 1705314690
+}
+```
+
+### Signature Verification
+
+```python
+import hashlib
+import hmac
+
+def verify(signature, timestamp, raw_body, secret):
+    message = f"{timestamp}.{raw_body}".encode("utf-8")
+    expected = "sha256=" + hmac.new(
+        secret.encode("utf-8"),
+        message,
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(signature, expected)
+```
+
+<Note>
+  Use the raw request body for verification. Re-serializing JSON will break the signature.
+</Note>
+
+### Retry Policy
+
+- 2xx is treated as success
+- Up to 5 retries with exponential backoff (max 4 hours)
+- 30s timeout per request
+
 ## Step 2: Poll for Status
 
 Check the task status periodically:

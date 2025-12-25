@@ -50,7 +50,8 @@
                     "model": "veo3.1",
                     "prompt": "A cat playing with a ball of yarn",
                     "duration": 5,
-                    "aspect_ratio": "16:9"
+                    "aspect_ratio": "16:9",
+                    "webhook_url": "https://example.com/eggapi/webhook"
                   }
                 }
               }
@@ -332,6 +333,12 @@
             "type": "string",
             "format": "uri",
             "description": "Reference image URL for image-to-image/video"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "Webhook URL to receive async task notifications"
           }
         }
       },
