@@ -47,8 +47,7 @@
                     "pages": [
                       "en/guides/models/veo3.1",
                       "en/guides/models/nanobanana",
-                      "en/guides/models/nanobanana-pro",
-                      "en/guides/models/imagen_4"
+                      "en/guides/models/nanobanana-pro"
                     ]
                   },
                   "en/guides/async-tasks",
@@ -113,8 +112,7 @@
                     "pages": [
                       "zh/guides/models/veo3.1",
                       "zh/guides/models/nanobanana",
-                      "zh/guides/models/nanobanana-pro",
-                      "zh/guides/models/imagen_4"
+                      "zh/guides/models/nanobanana-pro"
                     ]
                   },
                   "zh/guides/async-tasks",

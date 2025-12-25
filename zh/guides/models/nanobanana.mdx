@@ -38,8 +38,12 @@ nanobanana is a fast, efficient image generation model for general use cases.
   Number of images to generate (1-4, default: 1)
 </ParamField>
 
-<ParamField body="orientation" type="string">
-  Image orientation: `portrait` or `landscape`
+<ParamField body="image_url" type="string">
+  参考图 URL，用于图生图
+</ParamField>
+
+<ParamField body="webhook_url" type="string">
+  Webhook 回调地址。仅对异步任务生效，同步模型会忽略该参数
 </ParamField>
 
 ## Example
