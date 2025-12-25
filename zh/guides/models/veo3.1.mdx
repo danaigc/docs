@@ -117,5 +117,24 @@ console.log("Task ID:", task.id);
 ```
 
 <Note>
-  Video generation is asynchronous. Use the [Tasks API](/zh/guides/async-tasks) to poll for results.
+  视频生成是异步的。请使用 [Tasks API](/zh/guides/async-tasks) 轮询结果。
 </Note>
+
+## 失败响应
+
+```json
+{
+  "data": {
+    "id": "gen_abc123def456",
+    "status": "failed",
+    "model": "veo3.1",
+    "type": "video_generate",
+    "error": "Content moderation: prompt contains prohibited content",
+    "cost": "$0.00",
+    "created_at": "2025-12-25T21:03:47.879577+08:00",
+    "started_at": "2025-12-25T21:03:50.000000+08:00",
+    "completed_at": "2025-12-25T21:04:10.000000+08:00"
+  },
+  "error": null
+}
+```

@@ -126,3 +126,22 @@ console.log("Task ID:", task.id);
 <Note>
   Image generation is asynchronous. Use the [Tasks API](/en/guides/async-tasks) to poll for results.
 </Note>
+
+## Failure Response
+
+```json
+{
+  "data": {
+    "id": "gen_abc123def456",
+    "status": "failed",
+    "model": "nanobanana",
+    "type": "image_generate",
+    "error": "Content moderation: prompt contains prohibited content",
+    "cost": "$0.00",
+    "created_at": "2025-12-25T21:03:47.879577+08:00",
+    "started_at": "2025-12-25T21:03:50.000000+08:00",
+    "completed_at": "2025-12-25T21:04:10.000000+08:00"
+  },
+  "error": null
+}
+```
