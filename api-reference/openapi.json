@@ -24,7 +24,7 @@
       "post": {
         "operationId": "generate",
         "summary": "Generate Content",
-        "description": "Generate images or videos using AI models. Synchronous models (nanobanana) return results immediately, while async models (veo3.1) return a task ID for polling.",
+        "description": "Generate images or videos using AI models. Current models are asynchronous and return a task ID for polling (202 Accepted).",
         "tags": ["Generation"],
         "requestBody": {
           "required": true,
