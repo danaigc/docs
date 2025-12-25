@@ -54,7 +54,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "model": "veo3.1",
     "prompt": "A timelapse of clouds moving over mountains",
     "duration": 10,
-    "aspect_ratio": "16:9"
+    "aspect_ratio": "16:9",
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 
@@ -68,7 +69,8 @@ response = requests.post(
         "model": "veo3.1",
         "prompt": "A timelapse of clouds moving over mountains",
         "duration": 10,
-        "aspect_ratio": "16:9"
+        "aspect_ratio": "16:9",
+        "webhook_url": "https://webhook.site/your-webhook-id"
     }
 )
 
@@ -87,7 +89,8 @@ const response = await fetch("https://api.eggapi.ai/v1/generate", {
     model: "veo3.1",
     prompt: "A timelapse of clouds moving over mountains",
     duration: 10,
-    aspect_ratio: "16:9"
+    aspect_ratio: "16:9",
+    webhook_url: "https://webhook.site/your-webhook-id"
   })
 });
 

@@ -3,9 +3,9 @@ title: "Async Tasks"
 description: "Working with asynchronous generation tasks"
 ---
 
-## Asynchronous Models
+## 异步模型
 
-Egg API uses asynchronous generation for all current models:
+当前所有模型均为异步生成：
 
 | Model | Type | Response |
 |-------|------|----------|
@@ -50,7 +50,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "model": "veo3.1",
     "prompt": "A cat playing with a ball of yarn",
     "duration": 5,
-    "aspect_ratio": "16:9"
+    "aspect_ratio": "16:9",
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 
@@ -72,7 +73,7 @@ curl -X POST https://api.eggapi.ai/v1/generate \
 
 ## Webhook 通知（可选）
 
-如果不想轮询，可以在创建任务时传入 `webhook_url`。当任务完成或失败时，Egg API 会向该地址发送 POST 通知。
+如果不想轮询，可以在创建任务时传入 `webhook_url`。当任务完成或失败时，Egg API 会向该地址发送 POST 通知。可在 `https://webhook.site/` 获取测试回调地址。
 
 ```bash
 curl -X POST https://api.eggapi.ai/v1/generate \
@@ -83,7 +84,7 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "prompt": "A cat playing with a ball of yarn",
     "duration": 5,
     "aspect_ratio": "16:9",
-    "webhook_url": "https://example.com/eggapi/webhook"
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 

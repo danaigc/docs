@@ -34,7 +34,7 @@ Include your API key in the `Authorization` header with the `Bearer` prefix:
 curl https://api.eggapi.ai/v1/generate \
   -H "Authorization: Bearer egg_sk_your_api_key_here" \
   -H "Content-Type: application/json" \
-  -d '{"model": "nanobanana", "prompt": "..."}'
+  -d '{"model": "nanobanana", "prompt": "...", "webhook_url": "https://webhook.site/your-webhook-id"}'
 ```
 
 ```python Python
@@ -48,7 +48,11 @@ headers = {
 response = requests.post(
     "https://api.eggapi.ai/v1/generate",
     headers=headers,
-    json={"model": "nanobanana", "prompt": "..."}
+    json={
+        "model": "nanobanana",
+        "prompt": "...",
+        "webhook_url": "https://webhook.site/your-webhook-id"
+    }
 )
 ```
 
@@ -59,7 +63,11 @@ const response = await fetch("https://api.eggapi.ai/v1/generate", {
     "Authorization": "Bearer egg_sk_your_api_key_here",
     "Content-Type": "application/json"
   },
-  body: JSON.stringify({ model: "nanobanana", prompt: "..." })
+  body: JSON.stringify({
+    model: "nanobanana",
+    prompt: "...",
+    webhook_url: "https://webhook.site/your-webhook-id"
+  })
 });
 ```
 

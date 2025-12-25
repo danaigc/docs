@@ -60,7 +60,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "negative_prompt": "blurry, low quality",
     "width": 1024,
     "height": 1024,
-    "num_outputs": 2
+    "num_outputs": 2,
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 
@@ -76,7 +77,8 @@ response = requests.post(
         "negative_prompt": "blurry, low quality",
         "width": 1024,
         "height": 1024,
-        "num_outputs": 2
+        "num_outputs": 2,
+        "webhook_url": "https://webhook.site/your-webhook-id"
     }
 )
 
@@ -97,7 +99,8 @@ const response = await fetch("https://api.eggapi.ai/v1/generate", {
     negative_prompt: "blurry, low quality",
     width: 1024,
     height: 1024,
-    num_outputs: 2
+    num_outputs: 2,
+    webhook_url: "https://webhook.site/your-webhook-id"
   })
 });
 

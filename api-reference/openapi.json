@@ -41,7 +41,8 @@
                     "prompt": "A serene mountain landscape at sunset",
                     "width": 1024,
                     "height": 1024,
-                    "num_outputs": 1
+                    "num_outputs": 1,
+                    "webhook_url": "https://webhook.site/your-webhook-id"
                   }
                 },
                 "video": {
@@ -51,7 +52,7 @@
                     "prompt": "A cat playing with a ball of yarn",
                     "duration": 5,
                     "aspect_ratio": "16:9",
-                    "webhook_url": "https://example.com/eggapi/webhook"
+                    "webhook_url": "https://webhook.site/your-webhook-id"
                   }
                 }
               }

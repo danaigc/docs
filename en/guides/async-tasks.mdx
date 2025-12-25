@@ -50,7 +50,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "model": "veo3.1",
     "prompt": "A cat playing with a ball of yarn",
     "duration": 5,
-    "aspect_ratio": "16:9"
+    "aspect_ratio": "16:9",
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 
@@ -72,7 +73,7 @@ curl -X POST https://api.eggapi.ai/v1/generate \
 
 ## Webhook Notifications (Optional)
 
-If you don't want to poll, include `webhook_url` when you create the task. Egg API will POST to your URL when the task completes or fails.
+If you don't want to poll, include `webhook_url` when you create the task. Egg API will POST to your URL when the task completes or fails. You can get a test URL from `https://webhook.site/`.
 
 ```bash
 curl -X POST https://api.eggapi.ai/v1/generate \
@@ -83,7 +84,7 @@ curl -X POST https://api.eggapi.ai/v1/generate \
     "prompt": "A cat playing with a ball of yarn",
     "duration": 5,
     "aspect_ratio": "16:9",
-    "webhook_url": "https://example.com/eggapi/webhook"
+    "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
 
