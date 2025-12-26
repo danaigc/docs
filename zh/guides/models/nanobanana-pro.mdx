@@ -141,3 +141,113 @@ console.log("Task ID:", task.id);
   "error": null
 }
 ```
+
+---
+
+## 图片编辑模式
+
+nanobanana-pro 还支持专业级图片编辑功能，允许您使用自然语言提示修改现有图片。
+
+- **端点**: `POST /flow/v1/images/edits`
+- **内容类型**: `multipart/form-data`
+- **最大图片数**: 每次请求最多 9 张图片
+- **处理方式**: 异步
+
+### 图片编辑参数
+
+<ParamField body="model" type="string" required>
+  `nano_banana_pro`（注意：图片编辑使用下划线）
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  描述如何编辑图片（最多 2000 字符）
+</ParamField>
+
+<ParamField body="image[]" type="file[]">
+  要编辑的图片文件（最多 9 张）。使用此参数或 `image_url[]`。
+</ParamField>
+
+<ParamField body="image_url[]" type="string[]">
+  要编辑的图片 URL（最多 9 个）。使用此参数或 `image[]`。
+</ParamField>
+
+<ParamField body="webhook_url" type="string">
+  Webhook 回调地址，用于接收任务完成或失败通知
+</ParamField>
+
+### 图片编辑示例
+
+<CodeGroup>
+
+```bash cURL (文件上传)
+curl -X POST https://api.eggapi.ai/flow/v1/images/edits \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "image[]=@input.jpg" \
+  -F "prompt=转换为专业摄影棚人像照片" \
+  -F "model=nano_banana_pro"
+```
+
+```bash cURL (URL 输入)
+curl -X POST https://api.eggapi.ai/flow/v1/images/edits \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "image_url[]=https://example.com/image.jpg" \
+  -F "prompt=转换为专业摄影棚人像照片" \
+  -F "model=nano_banana_pro"
+```
+
+```python Python
+import requests
+
+# 使用文件上传
+with open("input.jpg", "rb") as f:
+    response = requests.post(
+        "https://api.eggapi.ai/flow/v1/images/edits",
+        headers={"Authorization": "Bearer YOUR_API_KEY"},
+        files=[("image[]", f)],
+        data={
+            "prompt": "转换为专业摄影棚人像照片",
+            "model": "nano_banana_pro"
+        }
+    )
+
+task = response.json()["data"]
+print(f"Task ID: {task['id']}")
+```
+
+```javascript JavaScript
+const formData = new FormData();
+formData.append('image[]', imageFile);
+formData.append('prompt', '转换为专业摄影棚人像照片');
+formData.append('model', 'nano_banana_pro');
+
+const response = await fetch('https://api.eggapi.ai/flow/v1/images/edits', {
+  method: 'POST',
+  headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
+  body: formData
+});
+
+const { data: task } = await response.json();
+console.log('Task ID:', task.id);
+```
+
+</CodeGroup>
+
+### 图片编辑响应
+
+```json
+{
+  "data": {
+    "id": "edit_abc123def456",
+    "status": "pending",
+    "model": "nano_banana_pro",
+    "type": "image_edit",
+    "cost": "$0.00",
+    "created_at": "2025-12-26T10:30:00.000000+08:00"
+  },
+  "error": null
+}
+```
+
+<Note>
+  图片编辑是异步的。请使用 [Tasks API](/zh/guides/async-tasks) 轮询结果。
+</Note>
