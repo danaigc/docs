@@ -43,8 +43,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   -d '{
     "model": "nanobanana-pro",
     "prompt": "A cute robot holding a coffee cup, digital art style",
-    "width": 1024,
-    "height": 1024,
+    "width": 1280,
+    "height": 720,
     "webhook_url": "https://webhook.site/your-webhook-id"
   }'
 ```
@@ -61,8 +61,8 @@ response = requests.post(
     json={
         "model": "nanobanana-pro",
         "prompt": "A cute robot holding a coffee cup, digital art style",
-        "width": 1024,
-        "height": 1024,
+        "width": 1280,
+        "height": 720,
         "webhook_url": "https://webhook.site/your-webhook-id"
     }
 )
@@ -81,8 +81,8 @@ const response = await fetch("https://api.eggapi.ai/v1/generate", {
   body: JSON.stringify({
     model: "nanobanana-pro",
     prompt: "A cute robot holding a coffee cup, digital art style",
-    width: 1024,
-    height: 1024,
+    width: 1280,
+    height: 720,
     webhook_url: "https://webhook.site/your-webhook-id"
   })
 });
