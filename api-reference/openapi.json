@@ -53,6 +53,14 @@
                     "aspect_ratio": "16:9",
                     "webhook_url": "https://webhook.site/your-webhook-id"
                   }
+                },
+                "image_edit": {
+                  "summary": "Edit an image",
+                  "value": {
+                    "model": "nanobanana",
+                    "prompt": "Change the background to a sunset beach",
+                    "image_urls": ["https://example.com/image.jpg"]
+                  }
                 }
               }
             }
@@ -287,92 +295,6 @@
           }
         }
       }
-    },
-    "/flow/v1/images/edits": {
-      "post": {
-        "operationId": "imageEdit",
-        "summary": "Edit Images",
-        "description": "Edit images using AI models with natural language prompts. Supports up to 9 images per request. Processing is asynchronous - returns a task ID for polling.",
-        "tags": ["Image Editing"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/ImageEditRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Async task created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskResponse"
-                },
-                "examples": {
-                  "success": {
-                    "summary": "Task created",
-                    "value": {
-                      "data": {
-                        "id": "edit_abc123def456",
-                        "status": "pending",
-                        "model": "nano_banana",
-                        "type": "image_edit",
-                        "cost": "$0.00",
-                        "created_at": "2025-12-26T10:30:00.000000+08:00"
-                      },
-                      "error": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient balance",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -422,51 +344,14 @@
             "enum": ["16:9", "9:16"],
             "description": "Aspect ratio for image or video generation (default: 16:9)"
           },
-          "image_url": {
-            "type": "string",
-            "format": "uri",
-            "description": "Reference image URL for image-to-image/video"
-          },
-          "webhook_url": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 2048,
-            "description": "Webhook URL to receive async task notifications"
-          }
-        }
-      },
-      "ImageEditRequest": {
-        "type": "object",
-        "required": ["model", "prompt"],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": ["nano_banana", "nano_banana_pro"],
-            "description": "The model to use for image editing (note: use underscores)"
-          },
-          "prompt": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Description of how to edit the image"
-          },
-          "image[]": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "binary"
-            },
-            "maxItems": 9,
-            "description": "Image files to edit (max 9). Use this OR image_url[]."
-          },
-          "image_url[]": {
+          "image_urls": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uri"
             },
             "maxItems": 9,
-            "description": "URLs of images to edit (max 9). Use this OR image[]."
+            "description": "Image URLs for image-to-image editing (supports up to 9 images)"
           },
           "webhook_url": {
             "type": "string",
