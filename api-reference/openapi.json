@@ -39,8 +39,7 @@
                   "value": {
                     "model": "nanobanana-pro",
                     "prompt": "A serene mountain landscape at sunset",
-                    "width": 1280,
-                    "height": 720,
+                    "aspect_ratio": "16:9",
                     "num_outputs": 1,
                     "webhook_url": "https://webhook.site/your-webhook-id"
                   }
@@ -319,18 +318,6 @@
             "maxLength": 1000,
             "description": "What to avoid in the generation"
           },
-          "width": {
-            "type": "integer",
-            "minimum": 256,
-            "maximum": 2048,
-            "description": "Image width in pixels (for image models). Must be 16:9 or 9:16 with height."
-          },
-          "height": {
-            "type": "integer",
-            "minimum": 256,
-            "maximum": 2048,
-            "description": "Image height in pixels (for image models). Must be 16:9 or 9:16 with width."
-          },
           "num_outputs": {
             "type": "integer",
             "minimum": 1,
@@ -347,7 +334,7 @@
           "aspect_ratio": {
             "type": "string",
             "enum": ["16:9", "9:16"],
-            "description": "Aspect ratio for video generation"
+            "description": "Aspect ratio for image or video generation (default: 16:9)"
           },
           "image_url": {
             "type": "string",
