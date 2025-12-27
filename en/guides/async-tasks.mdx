@@ -11,7 +11,6 @@ Egg API uses asynchronous generation for all current models:
 |-------|------|----------|
 | `nanobanana` | Asynchronous | Task ID returned, poll for results |
 | `nanobanana-pro` | Asynchronous | Task ID returned, poll for results |
-| `veo3.1` | Asynchronous | Task ID returned, poll for results |
 
 ## Async Workflow
 
@@ -47,9 +46,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "veo3.1",
+    "model": "nanobanana-pro",
     "prompt": "A cat playing with a ball of yarn",
-    "duration": 5,
     "aspect_ratio": "16:9",
     "webhook_url": "https://webhook.site/your-webhook-id"
   }'
@@ -62,8 +60,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   "data": {
     "id": "gen_abc123def456",
     "status": "pending",
-    "model": "veo3.1",
-    "type": "video_generate",
+    "model": "nanobanana-pro",
+    "type": "image_generate",
     "cost": "$0.00",
     "created_at": "2024-01-15T10:30:00Z"
   },
@@ -80,9 +78,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "veo3.1",
+    "model": "nanobanana-pro",
     "prompt": "A cat playing with a ball of yarn",
-    "duration": 5,
     "aspect_ratio": "16:9",
     "webhook_url": "https://webhook.site/your-webhook-id"
   }'
@@ -105,13 +102,12 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   "event": "task.completed",
   "task_id": "gen_abc123def456",
   "status": "completed",
-  "model": "veo3.1",
+  "model": "nanobanana-pro",
   "output": {
-    "url": "https://cdn.eggapi.ai/outputs/abc123.mp4",
-    "duration_seconds": 5
+    "url": "https://cdn.eggapi.ai/outputs/abc123.png"
   },
   "error": null,
-  "cost": "0.400000",
+  "cost": "0.016000",
   "timestamp": 1705314690
 }
 ```
@@ -123,7 +119,7 @@ When the task fails:
   "event": "task.failed",
   "task_id": "gen_abc123def456",
   "status": "failed",
-  "model": "veo3.1",
+  "model": "nanobanana-pro",
   "error": "Content moderation: prompt contains prohibited content",
   "cost": "0.000000",
   "timestamp": 1705314690
@@ -181,8 +177,8 @@ curl https://api.eggapi.ai/v1/tasks/gen_abc123def456 \
   "data": {
     "id": "gen_abc123def456",
     "status": "processing",
-    "model": "veo3.1",
-    "type": "video_generate",
+    "model": "nanobanana-pro",
+    "type": "image_generate",
     "cost": "$0.00",
     "created_at": "2024-01-15T10:30:00Z",
     "started_at": "2024-01-15T10:30:05Z"
@@ -200,16 +196,15 @@ When status is `completed`:
   "data": {
     "id": "gen_abc123def456",
     "status": "completed",
-    "model": "veo3.1",
-    "type": "video_generate",
+    "model": "nanobanana-pro",
+    "type": "image_generate",
     "output": {
-      "url": "https://cdn.eggapi.ai/outputs/abc123.mp4",
-      "duration_seconds": 5
+      "url": "https://cdn.eggapi.ai/outputs/abc123.png"
     },
-    "cost": "$0.4000",
+    "cost": "$0.0160",
     "created_at": "2024-01-15T10:30:00Z",
     "started_at": "2024-01-15T10:30:05Z",
-    "completed_at": "2024-01-15T10:31:30Z"
+    "completed_at": "2024-01-15T10:30:30Z"
   },
   "error": null
 }
@@ -220,7 +215,7 @@ When status is `completed`:
 ### Recommended Polling Interval
 
 - Start polling after 3-5 seconds
-- Poll every 5 seconds for videos
+- Poll every 5 seconds
 - Use exponential backoff if needed
 
 ### Example Implementation
@@ -256,7 +251,7 @@ def wait_for_task(task_id, api_key, max_wait=300):
 
 # Usage
 task = wait_for_task("gen_abc123", "YOUR_API_KEY")
-print(f"Video URL: {task['output']['url']}")
+print(f"Image URL: {task['output']['url']}")
 ```
 
 ```javascript JavaScript
@@ -288,7 +283,7 @@ async function waitForTask(taskId, apiKey, maxWait = 300000) {
 
 // Usage
 const task = await waitForTask("gen_abc123", "YOUR_API_KEY");
-console.log("Video URL:", task.output.url);
+console.log("Image URL:", task.output.url);
 ```
 
 </CodeGroup>
@@ -302,8 +297,8 @@ When a task fails, the response includes an error message:
   "data": {
     "id": "gen_abc123def456",
     "status": "failed",
-    "model": "veo3.1",
-    "type": "video_generate",
+    "model": "nanobanana-pro",
+    "type": "image_generate",
     "error": "Content moderation: prompt contains prohibited content",
     "cost": "$0.00",
     "created_at": "2024-01-15T10:30:00Z",

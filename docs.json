@@ -45,7 +45,6 @@
                   {
                     "group": "Models API",
                     "pages": [
-                      "en/guides/models/veo3.1",
                       "en/guides/models/nanobanana",
                       "en/guides/models/nanobanana-pro"
                     ]
@@ -110,7 +109,6 @@
                   {
                     "group": "模型 API",
                     "pages": [
-                      "zh/guides/models/veo3.1",
                       "zh/guides/models/nanobanana",
                       "zh/guides/models/nanobanana-pro"
                     ]

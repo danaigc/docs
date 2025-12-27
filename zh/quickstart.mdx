@@ -118,9 +118,8 @@ curl -X POST https://api.eggapi.ai/v1/generate \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "veo3.1",
+    "model": "nanobanana-pro",
     "prompt": "A cat playing with a ball of yarn",
-    "duration": 5,
     "aspect_ratio": "16:9",
     "webhook_url": "https://webhook.site/your-webhook-id"
   }'
@@ -141,9 +140,8 @@ response = requests.post(
     "https://api.eggapi.ai/v1/generate",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={
-        "model": "veo3.1",
+        "model": "nanobanana-pro",
         "prompt": "A cat playing with a ball of yarn",
-        "duration": 5,
         "aspect_ratio": "16:9",
         "webhook_url": "https://webhook.site/your-webhook-id"
     }
@@ -162,8 +160,7 @@ while True:
     task = status_response.json()["data"]
 
     if task["status"] == "completed":
-        print(f"Video URL: {task['output']['url']}")
-        print(f"Duration: {task['output']['duration_seconds']}s")
+        print(f"Image URL: {task['output']['url']}")
         print(f"Cost: {task['cost']}")
         break
     elif task["status"] == "failed":
@@ -197,10 +194,10 @@ curl https://api.eggapi.ai/v1/usage/summary \
       "request_count": 10
     },
     {
-      "model": "veo3.1",
-      "total_units": 25,
-      "total_cost": "$2.0000",
-      "request_count": 5
+      "model": "nanobanana",
+      "total_units": 20,
+      "total_cost": "$0.2000",
+      "request_count": 20
     }
   ],
   "error": null
